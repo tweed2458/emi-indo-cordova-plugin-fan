@@ -1,0 +1,7 @@
+dependencies {
+    implementation "com.google.ads.mediation:facebook:6.19.0.0"
+   // implementation 'com.chartboost:chartboost-mediation-adapter-meta-audience-network:5.6.18.0.0'
+   // implementation 'com.applovin.mediation:facebook-adapter:+'
+   // implementation 'com.unity3d.ads-mediation:facebook-adapter:4.3.49'
+}
+

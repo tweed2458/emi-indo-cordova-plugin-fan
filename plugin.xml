@@ -1,58 +1,139 @@
-<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" 
-  xmlns:android="http://schemas.android.com/apk/res/android" 
-  id="emi-indo-cordova-plugin-fan" 
-  version="0.0.2">
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    id="emi-indo-cordova-plugin-fan" version="0.0.7">
 
-  <name>emiFanPlugin</name>
-  <description>Cordova Plugin Facebook AudienceNetwork Ads</description>
-	<author>EMI INDO</author>
-	<license>ISC</license>
+    <name>emiFanPlugin</name>
+    <description>Cordova Plugin Facebook AudienceNetwork Ads for ANDROID and IOS</description>
+    <author>EMI INDO</author>
+    <license>ISC</license>
+
+    <js-module name="emiFanPlugin" src="www/emiFanPlugin.js">
+        <clobbers target="cordova.plugins.emiFanPlugin" />
+    </js-module>
+
+    <engines>
+        <engine name="cordova" version=">=12.0.0" />
+        <engine name="cordova-android" version=">=13.0.0" />
+        <engine name="cordova-ios" version=">=7.1.1" />
+    </engines>
+
+    <platform name="android">
+
+        <config-file parent="/*" target="res/xml/config.xml">
+            <feature name="emiFanPlugin">
+                <param name="android-package" value="emi.indo.cordova.plugin.fan.emiFanPlugin" />
+            </feature>
+        </config-file>
+
+        <config-file parent="/*" target="config.xml">
+        <preference name="AndroidXEnabled" value="true" />
+        <preference name="GradlePluginKotlinEnabled" value="true" />
+        <preference name="GradlePluginKotlinVersion" value="2.1.0" />
+        </config-file>
+        
+
+        <config-file parent="/*" target="AndroidManifest.xml" />
+        <source-file src="src/android/emiFanPlugin.kt" target-dir="app/src/main/kotlin/emi/indo/cordova/plugin/fan" />
+
+        <config-file parent="/manifest/application" target="AndroidManifest.xml">
+            <activity
+                android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+                android:excludeFromRecents="true"
+                android:name="com.google.android.gms.ads.AdActivity" android:noHistory="true" />
+
+            <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID"
+                android:value="$APP_ID_ANDROID" />
+            <meta-data android:name="com.google.android.gms.ads.DELAY_APP_MEASUREMENT_INIT"
+                android:value="true" />
+
+            <!-- Facebook SDK GDPR -->
+            <meta-data android:name='com.facebook.sdk.AutoLogAppEventsEnabled' android:value='$AUTO_LOG_APP_EVENTS_ENABLED' />
+            <meta-data android:name="com.facebook.sdk.AutoInitEnabled" android:value="$AUTO_INIT_ENABLED" />
+
+        </config-file>
+
+        <config-file parent="/manifest/application" target="AndroidManifest.xml">
+            <activity android:hardwareAccelerated="true" android:name="com.facebook.ads.AudienceNetworkActivity" />
+        </config-file>
 
 
-   <js-module src="www/emiFanPlugin.js" name="emiFanPlugin">
-   <clobbers target="cordova.plugins.emiFanPlugin"/>
-   </js-module>
+        <!-- Facebook SDK GDPR default value -->
+        <preference name="AUTO_LOG_APP_EVENTS_ENABLED" default="false" />
+        <preference name="AUTO_INIT_ENABLED" default="false" />
 
-   <engines>
-        <engine name="cordova" version=">=7.0.0" />
-        <engine name="cordova-android" version=">=6.0.0" />
-   </engines>
+        <!-- default value admob app id -->
+        <preference default="ca-app-pub-3940256099942544~3347511713" name="APP_ID_ANDROID" />
 
-     <platform name="android">
-	 
-   <config-file parent="/*" target="res/xml/config.xml">
-     <feature name="emiFanPlugin">
-     <param name="android-package" value="emi.indo.cordova.plugin.fan.emiFanPlugin"/>
-     </feature>
-   </config-file>
-   
-   <config-file parent="/*" target="AndroidManifest.xml"/>
-   <source-file src="src/android/emiFanPlugin.java" target-dir="src/emi/indo/cordova/plugin/fan"/>
+        <!-- default Meta SDK version -->
+        <preference default="6.19.0" name="FAN_ANDROID_SDK_VERSION" />
 
-         <config-file target="AndroidManifest.xml" parent="/manifest/application">
-            <activity android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" android:excludeFromRecents="true" android:name="com.google.android.gms.ads.AdActivity" android:noHistory="true" />
-            <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="$APP_ID_ANDROID" />
-            <meta-data android:name="com.google.android.gms.ads.DELAY_APP_MEASUREMENT_INIT" android:value="true"/>
-          </config-file>
-		
-		<config-file target="AndroidManifest.xml" parent="/manifest/application">
-			<activity android:name="com.facebook.ads.AudienceNetworkActivity" android:hardwareAccelerated="true"/>
-          </config-file>
+        <!-- Meta partner-mediation https://developers.facebook.com/docs/audience-network/bidding/partner-mediation -->
+        <framework custom="true" src="src/android/build-extras.gradle" type="gradleReference" />
 
-         <!-- Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713 -->
-      
-        <preference name="APP_ID_ANDROID" default="ca-app-pub-3940256099942544~3347511713" />
-        <preference name="PLAY_SERVICES_VERSION" default="21.5.0" />
-		
-        <framework src="com.google.android.gms:play-services-ads:$PLAY_SERVICES_VERSION" />
+        <!-- framework -->
+        <framework src="androidx.annotation:annotation:1.9.1" />
+        <framework src="com.facebook.android:audience-network-sdk:$FAN_ANDROID_SDK_VERSION" />
 
 
-        <framework src="androidx.annotation:annotation:1.0.0" />
-        <framework src="com.facebook.android:audience-network-sdk:6.+" />
-        <framework src="com.google.ads.mediation:facebook:6.13.7.0" />
+    </platform>
+
+    <platform name="ios">
+        <config-file parent="/*" target="config.xml">
+            <feature name="emiFanPlugin">
+                <param name="ios-package" value="emiFanPlugin" />
+            </feature>
+        </config-file>
+
+        <config-file parent="/*" target="config.xml">
+		<preference name="deployment-target" value="13.0" />
+		<preference name="SwiftVersion" value="5.10" />
+	    </config-file>
+
+        <header-file src="src/ios/emiFanPlugin.h" />
+        <source-file src="src/ios/emiFanPlugin.m" />
+
+        <!-- ATT -->
+        <preference name="USAGE"
+            default="This identifier will be used to deliver personalized ads to you." />
+        <config-file target="*-Info.plist" parent="NSUserTrackingUsageDescription">
+            <string>$USAGE</string>
+        </config-file>
+
+        <!-- default value admob app id -->
+        <preference name="APP_ID_IOS" default="ca-app-pub-3940256099942544~1458002511" />
+
+        <config-file target="*-Info.plist" parent="GADApplicationIdentifier">
+            <string>$APP_ID_IOS</string>
+        </config-file>
 
 
+        <!-- iOS14: SKAdNetwork -->
+        <config-file target="*-Info.plist" parent="SKAdNetworkItems">
+            <array>
+                <dict>
+                    <key>SKAdNetworkIdentifier</key>
+                    <string>v9wttpbfk9.skadnetwork</string>
+                </dict>
+                <dict>
+                    <key>SKAdNetworkIdentifier</key>
+                    <string>n38lu8286q.skadnetwork</string>
+                </dict>
+            </array>
+        </config-file>
 
-</platform>
+        <!-- framework -->
+        <framework src="AdSupport.framework" weak="true" />
+        <framework src="AppTrackingTransparency.framework" weak="true" />
 
+        <podspec>
+            <config>
+                <source url="https://cdn.cocoapods.org/" />
+            </config>
+            <pods use-frameworks="true">
+                <pod name="FBAudienceNetwork" spec="~> 6.10.0" />
+                <pod name="GoogleMobileAdsMediationFacebook" spec="~> 6.10.0.0" />
+            </pods>
+        </podspec>
+
+    </platform>
 </plugin>
